@@ -35,21 +35,57 @@ api.interceptors.response.use(
   }
 );
 
-// Authentication services
+// Main API service object
+export const apiService = {
+  // Authentication
+  login: (credentials) => api.post('/auth/login', credentials),
+  register: (userData) => api.post('/auth/register', userData),
+  getCurrentUser: () => api.get('/auth/me'),
+  
+  // Scenarios
+  getScenarios: (params) => api.get('/scenarios', { params }),
+  getScenario: (id) => api.get(`/scenarios/${id}`),
+  getHints: (id, step) => api.get(`/scenarios/${id}/hints`, { params: { step } }),
+  
+  // Incidents
+  startIncident: (scenarioId) => api.post('/incidents', { scenarioId }),
+  getIncidents: (params) => api.get('/incidents', { params }),
+  getIncidentAttempt: (id) => api.get(`/incidents/${id}`),
+  updateIncidentProgress: (id, data) => api.put(`/incidents/${id}/progress`, data),
+  getHint: (attemptId, stepIndex) => api.post(`/incidents/${attemptId}/hint`, { stepIndex }),
+  completeIncident: (id, data) => api.put(`/incidents/${id}/complete`, data),
+  
+  // Tools
+  getWiresharkData: (params) => api.get('/tools/wireshark', { params }),
+  getSuricataAlerts: (params) => api.get('/tools/suricata', { params }),
+  getSyslogData: (params) => api.get('/tools/syslog', { params }),
+  startPacketCapture: () => api.post('/tools/wireshark/capture/start'),
+  stopPacketCapture: () => api.post('/tools/wireshark/capture/stop'),
+  
+  // Scores and Leaderboard
+  getLeaderboard: (params) => api.get('/scores/leaderboard', { params }),
+  getUserStats: () => api.get('/scores/user'),
+  getAchievements: () => api.get('/scores/achievements'),
+  
+  // User management
+  getProfile: () => api.get('/users/profile'),
+  updateProfile: (data) => api.put('/users/profile', data),
+  getAllUsers: () => api.get('/users'),
+};
+
+// Legacy services for backward compatibility
 export const authService = {
   login: (credentials) => api.post('/auth/login', credentials),
   register: (userData) => api.post('/auth/register', userData),
   getCurrentUser: () => api.get('/auth/me'),
 };
 
-// Scenario services
 export const scenarioService = {
   getAll: (params) => api.get('/scenarios', { params }),
   getById: (id) => api.get(`/scenarios/${id}`),
   getHints: (id, step) => api.get(`/scenarios/${id}/hints`, { params: { step } }),
 };
 
-// Incident services
 export const incidentService = {
   start: (scenarioId) => api.post('/incidents', { scenarioId }),
   getAll: (params) => api.get('/incidents', { params }),
@@ -58,20 +94,17 @@ export const incidentService = {
   useHint: (id) => api.post(`/incidents/${id}/hint`),
 };
 
-// Tools services
 export const toolsService = {
   getWiresharkData: (params) => api.get('/tools/wireshark', { params }),
   getSuricataAlerts: (params) => api.get('/tools/suricata', { params }),
   getSyslogData: (params) => api.get('/tools/syslog', { params }),
 };
 
-// Scores services
 export const scoresService = {
   getLeaderboard: (params) => api.get('/scores/leaderboard', { params }),
   getUserScores: () => api.get('/scores/user'),
 };
 
-// User services
 export const userService = {
   getProfile: () => api.get('/users/profile'),
   getAllUsers: () => api.get('/users'),
