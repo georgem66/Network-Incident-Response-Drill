@@ -1,0 +1,34 @@
+# Main Suricata rules for Network Incident Response Training
+# Include training-specific rules
+include training.rules
+
+# Basic HTTP rules
+alert http any any -> any any (msg:"SURICATA HTTP unknown error"; flow:established; app-layer-event:http.unknown_error; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221000; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP invalid request chunk len"; flow:established; app-layer-event:http.invalid_request_chunk_len; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221001; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP invalid response chunk len"; flow:established; app-layer-event:http.invalid_response_chunk_len; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221002; rev:1;)
+
+# SSH rules
+alert ssh any any -> any any (msg:"SURICATA SSH invalid banner"; app-layer-event:ssh.invalid_banner; classtype:protocol-command-decode; sid:2250000; rev:1;)
+alert ssh any any -> any any (msg:"SURICATA SSH software version exchange invalid"; app-layer-event:ssh.software_version_exchange_invalid; classtype:protocol-command-decode; sid:2250001; rev:1;)
+
+# DNS rules
+alert dns any any -> any any (msg:"SURICATA DNS malformed request data"; app-layer-event:dns.malformed_data; classtype:protocol-command-decode; sid:2240000; rev:1;)
+alert dns any any -> any any (msg:"SURICATA DNS not a request"; app-layer-event:dns.not_a_request; classtype:protocol-command-decode; sid:2240001; rev:1;)
+alert dns any any -> any any (msg:"SURICATA DNS not a response"; app-layer-event:dns.not_a_response; classtype:protocol-command-decode; sid:2240002; rev:1;)
+
+# TLS rules
+alert tls any any -> any any (msg:"SURICATA TLS invalid handshake message"; app-layer-event:tls.invalid_handshake_message; classtype:protocol-command-decode; sid:2230000; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS invalid certificate"; app-layer-event:tls.invalid_certificate; classtype:protocol-command-decode; sid:2230001; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS certificate missing"; app-layer-event:tls.certificate_missing; classtype:protocol-command-decode; sid:2230002; rev:1;)
+
+# Network scanning detection
+alert tcp any any -> any any (msg:"ET SCAN Potential Port Scan"; flags:S; threshold: type both, track by_src, seconds 60, count 10; classtype:attempted-reconnaissance; sid:2000010; rev:1;)
+alert icmp any any -> any any (msg:"ET SCAN ICMP Sweep"; itype:8; threshold: type both, track by_src, seconds 30, count 10; classtype:attempted-reconnaissance; sid:2000011; rev:1;)
+
+# Malware communication
+alert http any any -> any any (msg:"ET MALWARE Suspicious POST with Base64"; flow:established,to_server; content:"POST"; http_method; content:"|3D|"; http_client_body; pcre:"/^[A-Za-z0-9+\/]{20,}={0,2}$/R"; classtype:trojan-activity; sid:2000020; rev:1;)
+alert dns any any -> any any (msg:"ET MALWARE DNS Query to Suspicious Domain"; content:".tk"; dns_query; classtype:trojan-activity; sid:2000021; rev:1;)
+
+# Phishing detection
+alert http any any -> any any (msg:"ET PHISHING Suspicious attachment in HTTP"; flow:established,from_server; content:"Content-Disposition"; http_header; content:"attachment"; http_header; content:".exe"; http_header; classtype:trojan-activity; sid:2000030; rev:1;)
+alert smtp any any -> any any (msg:"ET PHISHING Suspicious email attachment"; flow:established,to_server; content:"filename="; content:".exe"; distance:0; within:20; classtype:trojan-activity; sid:2000031; rev:1;)
