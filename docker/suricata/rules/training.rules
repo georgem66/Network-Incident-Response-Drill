@@ -1,0 +1,8 @@
+# Suricata rules for incident response training
+alert http any any -> any any (msg:"ET WEB_APPLICATION SQL Injection Attack"; flow:established,to_server; content:"POST"; http_method; content:"'"; http_client_body; content:"UNION"; http_client_body; classtype:web-application-attack; sid:2000001; rev:1;)
+
+alert http any any -> any any (msg:"ET WEB_APPLICATION SQL Injection UNION Attack"; flow:established,to_server; content:"UNION"; http_uri; content:"SELECT"; http_uri; classtype:web-application-attack; sid:2000002; rev:1;)
+
+alert http any any -> any any (msg:"ET POLICY HTTP Suspicious User-Agent"; flow:established,to_server; content:"User-Agent|3a 20|"; http_header; content:"sqlmap"; http_header; nocase; classtype:policy-violation; sid:2000003; rev:1;)
+
+alert tcp any any -> any 22 (msg:"ET SCAN SSH Brute Force Attack"; flags:S,12; threshold: type both, track by_src, seconds 60, count 5; classtype:attempted-reconnaissance; sid:2000004; rev:1;)

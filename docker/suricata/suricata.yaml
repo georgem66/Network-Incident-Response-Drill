@@ -1,0 +1,204 @@
+# Suricata configuration for Network Incident Response Drill
+%YAML 1.1
+---
+
+# Network configuration
+af-packet:
+  - interface: eth0
+    cluster-id: 99
+    cluster-type: cluster_flow
+    defrag: yes
+
+# Output configuration
+outputs:
+  - fast:
+      enabled: yes
+      filename: /var/log/suricata/fast.log
+      append: yes
+
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: /var/log/suricata/eve.json
+      pcap-file: false
+      community-id: false
+      community-id-seed: 0
+      types:
+        - alert:
+            payload: yes
+            packet: yes
+            metadata: yes
+        - http:
+            extended: yes
+        - dns:
+            query: yes
+            answer: yes
+        - tls:
+            extended: yes
+        - ssh
+        - smtp
+        - flow
+        - netflow
+
+  - unified2-alert:
+      enabled: no
+
+  - http-log:
+      enabled: yes
+      filename: /var/log/suricata/http.log
+      append: yes
+
+  - tls-log:
+      enabled: yes
+      filename: /var/log/suricata/tls.log
+      append: yes
+
+  - ssh-log:
+      enabled: yes
+      filename: /var/log/suricata/ssh.log
+      append: yes
+
+  - dns-log:
+      enabled: yes
+      filename: /var/log/suricata/dns.log
+      append: yes
+
+# Application layer parsers
+app-layer:
+  protocols:
+    http:
+      enabled: yes
+      memcap: 64mb
+    tls:
+      enabled: yes
+      detection-ports:
+        dp: 443
+    ssh:
+      enabled: yes
+    dns:
+      tcp:
+        enabled: yes
+        detection-ports:
+          dp: 53
+      udp:
+        enabled: yes
+        detection-ports:
+          dp: 53
+    smtp:
+      enabled: yes
+      mime:
+        decode-mime: yes
+        decode-base64: yes
+        decode-quoted-printable: yes
+        header-value-depth: 2000
+        extract-urls: yes
+        body-md5: no
+      inspected-tracker:
+        content-limit: 100000
+        content-inspect-min-size: 32768
+        content-inspect-window: 4096
+
+# Rule configuration
+default-rule-path: /etc/suricata/rules
+rule-files:
+  - suricata.rules
+  - local.rules
+
+# Classification configuration
+classification-file: /etc/suricata/classification.config
+reference-config-file: /etc/suricata/reference.config
+
+# Logging configuration
+logging:
+  default-log-level: info
+  default-output-filter:
+  outputs:
+  - console:
+      enabled: yes
+  - file:
+      enabled: yes
+      level: info
+      filename: /var/log/suricata/suricata.log
+
+# Performance tuning
+max-pending-packets: 1024
+detect:
+  profile: medium
+  custom-values:
+    toclient-groups: 3
+    toserver-groups: 25
+  sgh-mpm-context: auto
+  inspection-recursion-limit: 3000
+
+mpm-algo: auto
+spm-algo: auto
+
+threading:
+  set-cpu-affinity: no
+  cpu-affinity:
+    - management-cpu-set:
+        cpu: [ 0 ]  # include only these cpus in affinity settings
+    - receive-cpu-set:
+        cpu: [ 0 ]  # include only these cpus in affinity settings
+    - worker-cpu-set:
+        cpu: [ "all" ]
+        mode: "exclusive"
+        prio:
+          low: [ 0 ]
+          medium: [ "1-2" ]
+          high: [ 3 ]
+          default: "medium"
+  detect-thread-ratio: 1.0
+
+# Host configuration  
+host:
+  hash-size: 4096
+  prealloc: 1000
+  memcap: 32mb
+
+# Flow configuration
+flow:
+  memcap: 128mb
+  hash-size: 65536
+  prealloc: 10000
+  emergency-recovery: 30
+
+# Stream configuration
+stream:
+  memcap: 64mb
+  checksum-validation: yes
+  inline: auto
+  reassembly:
+    memcap: 256mb
+    depth: 1mb
+    toserver-chunk-size: 2560
+    toclient-chunk-size: 2560
+    randomize-chunk-size: yes
+
+# Defrag configuration
+defrag:
+  memcap: 32mb
+  hash-size: 65536
+  trackers: 65536
+  max-frags: 65536
+  prealloc: yes
+  timeout: 60
+
+# Host table configuration
+host-table:
+  hash-size: 4096
+  prealloc: 1000
+  memcap: 32mb
+
+# IP Reputation configuration
+reputation-categories-file: /etc/suricata/iprep/categories.txt
+default-reputation-path: /etc/suricata/iprep
+reputation-files:
+ #- reputation.list
+
+# Packet capture configuration
+pcap:
+  - interface: eth0
+
+pcap-file:
+  checksum-checks: auto

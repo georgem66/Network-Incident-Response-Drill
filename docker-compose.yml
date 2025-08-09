@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  # PostgreSQL for user data
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: incident_response
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+
+  # MongoDB for incident metadata
+  mongodb:
+    image: mongo:6
+    environment:
+      MONGO_INITDB_DATABASE: incidents
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./backend/database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    networks:
+      - app-network
+
+  # Redis for session management
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+  # Backend API
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: incident_response
+      DB_USER: postgres
+      DB_PASS: password
+      MONGO_URI: mongodb://mongodb:27017/incidents
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: your-secret-key-change-in-production
+    depends_on:
+      - postgres
+      - mongodb
+      - redis
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - app-network
+
+  # Frontend
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:3001
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+  # Network simulation container
+  network-sim:
+    build: ./docker/network-sim
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    ports:
+      - "8080:80"
+      - "8443:443"
+      - "2222:22"
+    networks:
+      - simulation-network
+      - app-network
+    volumes:
+      - ./docker/network-sim/logs:/var/log/simulation
+      - ./docker/network-sim/pcaps:/var/lib/pcaps
+
+  # Suricata IDS
+  suricata:
+    build: ./docker/suricata
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - SYS_NICE
+    volumes:
+      - ./docker/suricata/logs:/var/log/suricata
+      - ./docker/suricata/rules:/etc/suricata/rules
+    depends_on:
+      - network-sim
+
+volumes:
+  postgres_data:
+  mongodb_data:
+
+networks:
+  app-network:
+    driver: bridge
+  simulation-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.100.0/24
