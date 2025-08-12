@@ -16,7 +16,6 @@ const connectMongoDB = async () => {
   }
 };
 
-// Handle connection events
 mongoose.connection.on('connected', () => {
   console.log('Mongoose connected to MongoDB');
 });
@@ -29,7 +28,6 @@ mongoose.connection.on('disconnected', () => {
   console.log('Mongoose disconnected');
 });
 
-// Connect to MongoDB
 connectMongoDB();
 
 module.exports = mongoose;

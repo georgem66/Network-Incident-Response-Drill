@@ -3,7 +3,6 @@ const errorHandler = (error, req, res, next) => {
   let statusCode = error.statusCode || 500;
   let errors = null;
 
-  // Sequelize validation errors
   if (error.name === 'SequelizeValidationError') {
     statusCode = 400;
     errors = error.errors.map(err => ({
@@ -13,7 +12,6 @@ const errorHandler = (error, req, res, next) => {
     message = 'Validation error';
   }
 
-  // Sequelize unique constraint errors
   if (error.name === 'SequelizeUniqueConstraintError') {
     statusCode = 409;
     errors = error.errors.map(err => ({
@@ -23,13 +21,11 @@ const errorHandler = (error, req, res, next) => {
     message = 'Duplicate entry error';
   }
 
-  // Sequelize foreign key errors
   if (error.name === 'SequelizeForeignKeyConstraintError') {
     statusCode = 400;
     message = 'Invalid reference';
   }
 
-  // MongoDB validation errors
   if (error.name === 'ValidationError') {
     statusCode = 400;
     errors = Object.values(error.errors).map(err => ({
@@ -39,7 +35,6 @@ const errorHandler = (error, req, res, next) => {
     message = 'Validation error';
   }
 
-  // JWT errors
   if (error.name === 'JsonWebTokenError') {
     statusCode = 401;
     message = 'Invalid token';
@@ -50,7 +45,6 @@ const errorHandler = (error, req, res, next) => {
     message = 'Token expired';
   }
 
-  // Multer errors (file upload)
   if (error.code === 'LIMIT_FILE_SIZE') {
     statusCode = 413;
     message = 'File too large';

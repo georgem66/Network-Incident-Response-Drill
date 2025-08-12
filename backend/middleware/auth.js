@@ -24,7 +24,6 @@ const authMiddleware = async (req, res, next) => {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       
-      // Find user in database
       const user = await User.findByPk(decoded.userId);
       
       if (!user || !user.isActive) {
@@ -58,7 +57,6 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-// Middleware to check user roles
 const requireRole = (roles) => {
   return (req, res, next) => {
     if (!req.user) {
