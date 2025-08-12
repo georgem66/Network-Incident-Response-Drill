@@ -12,14 +12,12 @@ import {
 } from '@mui/icons-material';
 import { apiService } from '../../services/api';
 import toast from 'react-hot-toast';
-
 const ScenarioDetail = () => {
   const { scenarioId } = useParams();
   const navigate = useNavigate();
   const [scenario, setScenario] = useState(null);
   const [loading, setLoading] = useState(true);
   const [startDialogOpen, setStartDialogOpen] = useState(false);
-
   useEffect(() => {
     const fetchScenario = async () => {
       try {
@@ -32,12 +30,10 @@ const ScenarioDetail = () => {
         setLoading(false);
       }
     };
-
     if (scenarioId) {
       fetchScenario();
     }
   }, [scenarioId]);
-
   const handleStartIncident = async () => {
     try {
       const response = await apiService.startIncident(scenarioId);
@@ -49,7 +45,6 @@ const ScenarioDetail = () => {
     }
     setStartDialogOpen(false);
   };
-
   const getSeverityColor = (severity) => {
     switch (severity?.toLowerCase()) {
       case 'high': return 'error';
@@ -58,7 +53,6 @@ const ScenarioDetail = () => {
       default: return 'default';
     }
   };
-
   const getStepIcon = (stepType) => {
     switch (stepType) {
       case 'detection': return <Security />;
@@ -68,7 +62,6 @@ const ScenarioDetail = () => {
       default: return <Info />;
     }
   };
-
   if (loading) {
     return (
       <Box>
@@ -79,7 +72,6 @@ const ScenarioDetail = () => {
       </Box>
     );
   }
-
   if (!scenario) {
     return (
       <Box>
@@ -89,10 +81,9 @@ const ScenarioDetail = () => {
       </Box>
     );
   }
-
   return (
     <Box>
-      {/* Header Section */}
+      {}
       <Paper sx={{ p: 3, mb: 3 }}>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} md={8}>
@@ -138,9 +129,8 @@ const ScenarioDetail = () => {
           </Grid>
         </Grid>
       </Paper>
-
       <Grid container spacing={3}>
-        {/* Scenario Overview */}
+        {}
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
@@ -176,8 +166,7 @@ const ScenarioDetail = () => {
             </CardContent>
           </Card>
         </Grid>
-
-        {/* Attack Details */}
+        {}
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
@@ -191,7 +180,6 @@ const ScenarioDetail = () => {
               <Typography variant="body2" paragraph>
                 {scenario.attackVector || 'Web application vulnerability exploitation'}
               </Typography>
-              
               <Typography variant="subtitle2" color="primary" gutterBottom>
                 Indicators of Compromise (IoCs):
               </Typography>
@@ -220,8 +208,7 @@ const ScenarioDetail = () => {
             </CardContent>
           </Card>
         </Grid>
-
-        {/* Response Steps */}
+        {}
         <Grid item xs={12}>
           <Card>
             <CardContent>
@@ -302,8 +289,7 @@ const ScenarioDetail = () => {
           </Card>
         </Grid>
       </Grid>
-
-      {/* Start Incident Dialog */}
+      {}
       <Dialog 
         open={startDialogOpen} 
         onClose={() => setStartDialogOpen(false)}
@@ -358,5 +344,4 @@ const ScenarioDetail = () => {
     </Box>
   );
 };
-
 export default ScenarioDetail;

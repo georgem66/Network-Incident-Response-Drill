@@ -1,42 +1,14 @@
 const express = require('express');
 const ScenarioAttempt = require('../models/ScenarioAttempt');
 const User = require('../models/User');
-
 const router = express.Router();
-
-/**
- * @swagger
- * /api/scores/leaderboard:
- *   get:
- *     summary: Get leaderboard
- *     tags: [Scores]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: scenario
- *         schema:
- *           type: string
- *         description: Filter by scenario ID
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *           default: 10
- *         description: Number of results to return
- *     responses:
- *       200:
- *         description: Leaderboard retrieved successfully
- */
 router.get('/leaderboard', async (req, res, next) => {
   try {
     const { scenario, limit = 10 } = req.query;
     const where = { status: 'completed' };
-    
     if (scenario) {
       where.scenarioId = scenario;
     }
-
     const attempts = await ScenarioAttempt.findAll({
       where,
       include: [{
@@ -50,7 +22,6 @@ router.get('/leaderboard', async (req, res, next) => {
       ],
       limit: parseInt(limit)
     });
-
     const leaderboard = attempts.map((attempt, index) => ({
       rank: index + 1,
       user: attempt.user ? {
@@ -64,7 +35,6 @@ router.get('/leaderboard', async (req, res, next) => {
       hintsUsed: attempt.hintsUsed,
       completedAt: attempt.endTime
     }));
-
     res.json({
       success: true,
       data: {
@@ -77,19 +47,6 @@ router.get('/leaderboard', async (req, res, next) => {
     next(error);
   }
 });
-
-/**
- * @swagger
- * /api/scores/user:
- *   get:
- *     summary: Get current user's scores
- *     tags: [Scores]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: User scores retrieved successfully
- */
 router.get('/user', async (req, res, next) => {
   try {
     const attempts = await ScenarioAttempt.findAll({
@@ -99,7 +56,6 @@ router.get('/user', async (req, res, next) => {
       },
       order: [['endTime', 'DESC']]
     });
-
     const stats = {
       totalAttempts: attempts.length,
       totalScore: attempts.reduce((sum, attempt) => sum + attempt.score, 0),
@@ -108,7 +64,6 @@ router.get('/user', async (req, res, next) => {
       totalTime: attempts.reduce((sum, attempt) => sum + (attempt.timeTaken || 0), 0),
       scenariosCompleted: [...new Set(attempts.map(a => a.scenarioId))].length
     };
-
     res.json({
       success: true,
       data: {
@@ -120,5 +75,4 @@ router.get('/user', async (req, res, next) => {
     next(error);
   }
 });
-
 module.exports = router;

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Box } from '@mui/material';
-
 import { useAuth } from './contexts/AuthContext';
 import Layout from './components/Layout/Layout';
 import Login from './pages/Login/Login';
@@ -14,14 +13,11 @@ import Tools from './pages/Tools/Tools';
 import Leaderboard from './pages/Leaderboard/Leaderboard';
 import Profile from './pages/Profile/Profile';
 import LoadingScreen from './components/LoadingScreen/LoadingScreen';
-
 function App() {
   const { user, loading } = useAuth();
-
   if (loading) {
     return <LoadingScreen />;
   }
-
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {user ? (
@@ -48,5 +44,4 @@ function App() {
     </Box>
   );
 }
-
 export default App;

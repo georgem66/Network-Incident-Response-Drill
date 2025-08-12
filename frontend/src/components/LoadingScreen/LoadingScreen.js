@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, CircularProgress, Typography, Paper } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
-
 const LoadingScreen = () => {
   return (
     <Box
@@ -51,5 +50,4 @@ const LoadingScreen = () => {
     </Box>
   );
 };
-
 export default LoadingScreen;

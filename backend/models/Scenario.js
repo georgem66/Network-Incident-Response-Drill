@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const scenarioSchema = new mongoose.Schema({
   _id: {
     type: String,
@@ -124,11 +123,8 @@ const scenarioSchema = new mongoose.Schema({
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 });
-
-// Indexes
 scenarioSchema.index({ severity: 1 });
 scenarioSchema.index({ category: 1 });
 scenarioSchema.index({ difficultyLevel: 1 });
 scenarioSchema.index({ createdAt: -1 });
-
 module.exports = mongoose.model('Scenario', scenarioSchema);

@@ -1,5 +1,4 @@
 const { Sequelize } = require('sequelize');
-
 const sequelize = new Sequelize(
   process.env.DB_NAME || 'incident_response',
   process.env.DB_USER || 'postgres', 
@@ -17,5 +16,4 @@ const sequelize = new Sequelize(
     }
   }
 );
-
 module.exports = sequelize;

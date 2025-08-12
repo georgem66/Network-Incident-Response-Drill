@@ -9,20 +9,16 @@ import {
   WorkspacePremium, LocalFireDepartment, Timer
 } from '@mui/icons-material';
 import toast from 'react-hot-toast';
-
 const Leaderboard = () => {
   const [tabValue, setTabValue] = useState(0);
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [achievements, setAchievements] = useState([]);
   const [userStats, setUserStats] = useState(null);
-
   useEffect(() => {
     loadLeaderboardData();
   }, [tabValue]);
-
   const loadLeaderboardData = async () => {
     try {
-      // Mock data
       setLeaderboardData([
         {
           id: 1,
@@ -34,7 +30,6 @@ const Leaderboard = () => {
           level: 'Advanced'
         }
       ]);
-
       setAchievements([
         {
           id: 1,
@@ -45,7 +40,6 @@ const Leaderboard = () => {
           points: 50
         }
       ]);
-
       setUserStats({
         currentRank: 15,
         totalScore: 1850,
@@ -59,14 +53,12 @@ const Leaderboard = () => {
       toast.error('Failed to load leaderboard data');
     }
   };
-
   const getRankIcon = (rank) => {
     if (rank === 1) return <EmojiEvents sx={{ color: 'gold' }} />;
     if (rank === 2) return <EmojiEvents sx={{ color: 'silver' }} />;
     if (rank === 3) return <EmojiEvents sx={{ color: '#CD7F32' }} />;
     return rank;
   };
-
   const getLevelColor = (level) => {
     switch (level) {
       case 'Beginner': return 'info';
@@ -76,13 +68,11 @@ const Leaderboard = () => {
       default: return 'default';
     }
   };
-
   const TabPanel = ({ children, value, index }) => (
     <div hidden={value !== index}>
       {value === index && <Box>{children}</Box>}
     </div>
   );
-
   return (
     <Box>
       <Paper sx={{ p: 3, mb: 3 }}>
@@ -94,7 +84,6 @@ const Leaderboard = () => {
           Track your progress, compete with peers, and unlock achievements
         </Typography>
       </Paper>
-
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Card>
@@ -116,7 +105,6 @@ const Leaderboard = () => {
                     />
                   </Box>
                 </Grid>
-                
                 <Grid item xs={12} md={9}>
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} md={3}>
@@ -128,7 +116,6 @@ const Leaderboard = () => {
                         </Typography>
                       </Box>
                     </Grid>
-                    
                     <Grid item xs={12} sm={6} md={3}>
                       <Box sx={{ textAlign: 'center', p: 1 }}>
                         <CheckCircle color="success" sx={{ fontSize: 30, mb: 1 }} />
@@ -138,7 +125,6 @@ const Leaderboard = () => {
                         </Typography>
                       </Box>
                     </Grid>
-                    
                     <Grid item xs={12} sm={6} md={3}>
                       <Box sx={{ textAlign: 'center', p: 1 }}>
                         <Speed color="info" sx={{ fontSize: 30, mb: 1 }} />
@@ -148,7 +134,6 @@ const Leaderboard = () => {
                         </Typography>
                       </Box>
                     </Grid>
-                    
                     <Grid item xs={12} sm={6} md={3}>
                       <Box sx={{ textAlign: 'center', p: 1 }}>
                         <LocalFireDepartment color="warning" sx={{ fontSize: 30, mb: 1 }} />
@@ -159,7 +144,6 @@ const Leaderboard = () => {
                       </Box>
                     </Grid>
                   </Grid>
-                  
                   <Box sx={{ mt: 2 }}>
                     <Typography variant="body2" color="text.secondary" gutterBottom>
                       Progress to Next Level
@@ -178,7 +162,6 @@ const Leaderboard = () => {
             </CardContent>
           </Card>
         </Grid>
-
         <Grid item xs={12}>
           <Card>
             <Tabs value={tabValue} onChange={(e, v) => setTabValue(v)} sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -186,7 +169,6 @@ const Leaderboard = () => {
               <Tab icon={<Timer />} label="This Week" />
               <Tab icon={<WorkspacePremium />} label="Achievements" />
             </Tabs>
-
             <TabPanel value={tabValue} index={0}>
               <Box sx={{ p: 3 }}>
                 <Typography variant="h6" gutterBottom>
@@ -257,7 +239,6 @@ const Leaderboard = () => {
                 </TableContainer>
               </Box>
             </TabPanel>
-
             <TabPanel value={tabValue} index={1}>
               <Box sx={{ p: 3 }}>
                 <Typography variant="h6" gutterBottom>
@@ -268,7 +249,6 @@ const Leaderboard = () => {
                 </Typography>
               </Box>
             </TabPanel>
-
             <TabPanel value={tabValue} index={2}>
               <Box sx={{ p: 3 }}>
                 <Typography variant="h6" gutterBottom>
@@ -313,5 +293,4 @@ const Leaderboard = () => {
     </Box>
   );
 };
-
 export default Leaderboard;

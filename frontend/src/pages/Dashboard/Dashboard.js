@@ -31,10 +31,8 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
-
 import { useAuth } from '../../contexts/AuthContext';
 import { scenarioService, incidentService, scoresService } from '../../services/api';
-
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -43,7 +41,6 @@ const Dashboard = () => {
   const [userStats, setUserStats] = useState({});
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -52,12 +49,9 @@ const Dashboard = () => {
           incidentService.getAll({ status: 'active' }),
           scoresService.getUserScores(),
         ]);
-
         setScenarios(scenariosRes.data.scenarios.slice(0, 3));
         setRecentAttempts(attemptsRes.data.attempts.slice(0, 5));
         setUserStats(statsRes.data.stats);
-
-        // Simulate real-time alerts
         setAlerts([
           {
             id: 1,
@@ -82,10 +76,8 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
-
     fetchDashboardData();
   }, []);
-
   const getSeverityColor = (severity) => {
     switch (severity) {
       case 'critical':
@@ -100,7 +92,6 @@ const Dashboard = () => {
         return 'default';
     }
   };
-
   const getStatusColor = (status) => {
     switch (status) {
       case 'completed':
@@ -113,7 +104,6 @@ const Dashboard = () => {
         return 'default';
     }
   };
-
   if (loading) {
     return (
       <Box>
@@ -124,10 +114,9 @@ const Dashboard = () => {
       </Box>
     );
   }
-
   return (
     <Box>
-      {/* Welcome Header */}
+      {}
       <Paper sx={{ p: 3, mb: 3, background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)' }}>
         <Typography variant="h4" sx={{ color: 'white', fontWeight: 600, mb: 1 }}>
           Welcome back, {user?.firstName || user?.username}! 👋
@@ -136,9 +125,8 @@ const Dashboard = () => {
           Ready to enhance your incident response skills? Choose a scenario below to get started.
         </Typography>
       </Paper>
-
       <Grid container spacing={3}>
-        {/* Stats Cards */}
+        {}
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent>
@@ -157,7 +145,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent>
@@ -176,7 +163,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent>
@@ -195,7 +181,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-
         <Grid item xs={12} sm={6} md={3}>
           <Card>
             <CardContent>
@@ -214,8 +199,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-
-        {/* Available Scenarios */}
+        {}
         <Grid item xs={12} md={8}>
           <Card>
             <CardContent>
@@ -276,8 +260,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-
-        {/* Live Alerts */}
+        {}
         <Grid item xs={12} md={4}>
           <Card>
             <CardContent>
@@ -316,8 +299,7 @@ const Dashboard = () => {
               </List>
             </CardContent>
           </Card>
-
-          {/* Recent Activity */}
+          {}
           <Card sx={{ mt: 2 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -361,5 +343,4 @@ const Dashboard = () => {
     </Box>
   );
 };
-
 export default Dashboard;

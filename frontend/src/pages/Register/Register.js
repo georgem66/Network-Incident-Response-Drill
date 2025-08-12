@@ -25,23 +25,18 @@ import {
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-
 import { useAuth } from '../../contexts/AuthContext';
-
 const Register = () => {
   const { register: registerUser, loading, error } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
-
   const watchPassword = watch('password', '');
-
   const onSubmit = async (data) => {
     try {
       const { confirmPassword, ...userData } = data;
@@ -52,11 +47,9 @@ const Register = () => {
       toast.error(error.message || 'Registration failed');
     }
   };
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
   return (
     <Box
       sx={{
@@ -115,13 +108,11 @@ const Register = () => {
             Create your account to start incident response training
           </Typography>
         </Box>
-
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
-
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
@@ -157,7 +148,6 @@ const Register = () => {
               />
             </Grid>
           </Grid>
-
           <TextField
             fullWidth
             label="Username"
@@ -184,7 +174,6 @@ const Register = () => {
             error={!!errors.username}
             helperText={errors.username?.message}
           />
-
           <TextField
             fullWidth
             label="Email Address"
@@ -208,7 +197,6 @@ const Register = () => {
             error={!!errors.email}
             helperText={errors.email?.message}
           />
-
           <TextField
             fullWidth
             label="Password"
@@ -243,7 +231,6 @@ const Register = () => {
             error={!!errors.password}
             helperText={errors.password?.message}
           />
-
           <TextField
             fullWidth
             label="Confirm Password"
@@ -265,7 +252,6 @@ const Register = () => {
             error={!!errors.confirmPassword}
             helperText={errors.confirmPassword?.message}
           />
-
           <Button
             type="submit"
             fullWidth
@@ -288,13 +274,11 @@ const Register = () => {
               'Create Account'
             )}
           </Button>
-
           <Divider sx={{ my: 2 }}>
             <Typography variant="body2" color="text.secondary">
               Already have an account?
             </Typography>
           </Divider>
-
           <Box sx={{ textAlign: 'center' }}>
             <Link
               component={RouterLink}
@@ -316,5 +300,4 @@ const Register = () => {
     </Box>
   );
 };
-
 export default Register;

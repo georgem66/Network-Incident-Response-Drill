@@ -13,7 +13,6 @@ import {
 } from '@mui/icons-material';
 import { apiService } from '../../services/api';
 import toast from 'react-hot-toast';
-
 const IncidentResponse = () => {
   const { attemptId } = useParams();
   const navigate = useNavigate();
@@ -27,7 +26,6 @@ const IncidentResponse = () => {
   const [hints, setHints] = useState({});
   const [showHintDialog, setShowHintDialog] = useState(false);
   const [currentHint, setCurrentHint] = useState('');
-
   useEffect(() => {
     const fetchAttempt = async () => {
       try {
@@ -42,13 +40,10 @@ const IncidentResponse = () => {
         setLoading(false);
       }
     };
-
     if (attemptId) {
       fetchAttempt();
     }
   }, [attemptId]);
-
-  // Timer effect
   useEffect(() => {
     let interval;
     if (isRunning) {
@@ -60,13 +55,11 @@ const IncidentResponse = () => {
     }
     return () => clearInterval(interval);
   }, [isRunning]);
-
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
-
   const handleStepComplete = async (stepIndex) => {
     try {
       await apiService.updateIncidentProgress(attemptId, {
@@ -81,14 +74,12 @@ const IncidentResponse = () => {
       toast.error('Failed to save progress');
     }
   };
-
   const handleAnswer = (stepIndex, questionId, answer) => {
     setStepAnswers(prev => ({
       ...prev,
       [`${stepIndex}_${questionId}`]: answer
     }));
   };
-
   const getHint = async (stepIndex) => {
     try {
       const response = await apiService.getHint(attemptId, stepIndex);
@@ -100,7 +91,6 @@ const IncidentResponse = () => {
       toast.error('No hint available for this step');
     }
   };
-
   const completeIncident = async () => {
     try {
       setIsRunning(false);
@@ -116,7 +106,6 @@ const IncidentResponse = () => {
       toast.error('Failed to complete incident');
     }
   };
-
   const mockSteps = [
     {
       id: 1,
@@ -203,7 +192,6 @@ const IncidentResponse = () => {
       tools: ['System Scanner', 'Application Tester', 'Network Monitor']
     }
   ];
-
   if (loading) {
     return (
       <Box>
@@ -214,10 +202,9 @@ const IncidentResponse = () => {
       </Box>
     );
   }
-
   return (
     <Box>
-      {/* Header with Timer and Controls */}
+      {}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Grid container alignItems="center" spacing={2}>
           <Grid item xs={12} md={6}>
@@ -255,9 +242,8 @@ const IncidentResponse = () => {
           </Grid>
         </Grid>
       </Paper>
-
       <Grid container spacing={3}>
-        {/* Main Workflow */}
+        {}
         <Grid item xs={12} lg={8}>
           <Card>
             <CardContent>
@@ -266,7 +252,6 @@ const IncidentResponse = () => {
                 <Tab label="Tools" />
                 <Tab label="Evidence" />
               </Tabs>
-
               {tabValue === 0 && (
                 <Box>
                   <Stepper activeStep={currentStep} orientation="vertical">
@@ -283,14 +268,12 @@ const IncidentResponse = () => {
                           <Typography paragraph>
                             {step.description}
                           </Typography>
-                          
-                          {/* Questions for this step */}
+                          {}
                           {step.questions.map((question, qIndex) => (
                             <Box key={question.id} sx={{ mb: 3 }}>
                               <Typography variant="subtitle1" gutterBottom>
                                 {question.question}
                               </Typography>
-                              
                               {question.type === 'multiple_choice' && (
                                 <FormGroup>
                                   {question.options.map((option) => (
@@ -307,7 +290,6 @@ const IncidentResponse = () => {
                                   ))}
                                 </FormGroup>
                               )}
-                              
                               {question.type === 'checkbox' && (
                                 <FormGroup>
                                   {question.options.map((option) => (
@@ -330,7 +312,6 @@ const IncidentResponse = () => {
                                   ))}
                                 </FormGroup>
                               )}
-                              
                               {question.type === 'text' && (
                                 <TextField
                                   fullWidth
@@ -344,7 +325,6 @@ const IncidentResponse = () => {
                               )}
                             </Box>
                           ))}
-                          
                           <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
                             <Button
                               variant="contained"
@@ -369,7 +349,6 @@ const IncidentResponse = () => {
                   </Stepper>
                 </Box>
               )}
-
               {tabValue === 1 && (
                 <Box>
                   <Typography variant="h6" gutterBottom>
@@ -390,7 +369,6 @@ const IncidentResponse = () => {
                   </Grid>
                 </Box>
               )}
-
               {tabValue === 2 && (
                 <Box>
                   <Typography variant="h6" gutterBottom>
@@ -424,11 +402,10 @@ const IncidentResponse = () => {
             </CardContent>
           </Card>
         </Grid>
-
-        {/* Sidebar with Progress and Alerts */}
+        {}
         <Grid item xs={12} lg={4}>
           <Grid container spacing={2}>
-            {/* Progress Summary */}
+            {}
             <Grid item xs={12}>
               <Card>
                 <CardContent>
@@ -459,8 +436,7 @@ const IncidentResponse = () => {
                 </CardContent>
               </Card>
             </Grid>
-
-            {/* Active Alerts */}
+            {}
             <Grid item xs={12}>
               <Card>
                 <CardContent>
@@ -488,8 +464,7 @@ const IncidentResponse = () => {
           </Grid>
         </Grid>
       </Grid>
-
-      {/* Hint Dialog */}
+      {}
       <Dialog 
         open={showHintDialog} 
         onClose={() => setShowHintDialog(false)}
@@ -517,5 +492,4 @@ const IncidentResponse = () => {
     </Box>
   );
 };
-
 export default IncidentResponse;

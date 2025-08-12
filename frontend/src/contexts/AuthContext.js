@@ -1,15 +1,12 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { authService } from '../services/api';
-
 const AuthContext = createContext();
-
 const initialState = {
   user: null,
   token: localStorage.getItem('token'),
   loading: true,
   error: null,
 };
-
 const authReducer = (state, action) => {
   switch (action.type) {
     case 'SET_LOADING':
@@ -49,10 +46,8 @@ const authReducer = (state, action) => {
       return state;
   }
 };
-
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-
   useEffect(() => {
     const initializeAuth = async () => {
       if (state.token) {
@@ -73,14 +68,11 @@ export const AuthProvider = ({ children }) => {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
     };
-
     initializeAuth();
   }, []);
-
   const login = async (credentials) => {
     dispatch({ type: 'SET_LOADING', payload: true });
     dispatch({ type: 'CLEAR_ERROR' });
-
     try {
       const response = await authService.login(credentials);
       dispatch({
@@ -97,11 +89,9 @@ export const AuthProvider = ({ children }) => {
       throw new Error(errorMessage);
     }
   };
-
   const register = async (userData) => {
     dispatch({ type: 'SET_LOADING', payload: true });
     dispatch({ type: 'CLEAR_ERROR' });
-
     try {
       const response = await authService.register(userData);
       dispatch({
@@ -118,15 +108,12 @@ export const AuthProvider = ({ children }) => {
       throw new Error(errorMessage);
     }
   };
-
   const logout = () => {
     dispatch({ type: 'LOGOUT' });
   };
-
   const clearError = () => {
     dispatch({ type: 'CLEAR_ERROR' });
   };
-
   const value = {
     ...state,
     login,
@@ -134,10 +121,8 @@ export const AuthProvider = ({ children }) => {
     logout,
     clearError,
   };
-
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

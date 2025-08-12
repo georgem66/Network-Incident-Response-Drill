@@ -1,25 +1,9 @@
-// Initialize MongoDB for Network Incident Response Drill Platform
-// This script sets up the initial collections and indexes
-
-// Use the incidents database
 db = db.getSiblingDB('incidents');
-
-// Create scenarios collection
 db.createCollection('scenarios');
-
-// Create incidents collection
 db.createCollection('incidents');
-
-// Create logs collection
 db.createCollection('logs');
-
-// Create network_traffic collection
 db.createCollection('network_traffic');
-
-// Create alerts collection
 db.createCollection('alerts');
-
-// Insert sample scenarios
 db.scenarios.insertMany([
   {
     _id: 'sql_injection_attack',
@@ -401,27 +385,20 @@ db.scenarios.insertMany([
     updated_at: new Date()
   }
 ]);
-
-// Create indexes for better performance
 db.scenarios.createIndex({ "severity": 1 });
 db.scenarios.createIndex({ "category": 1 });
 db.scenarios.createIndex({ "difficulty_level": 1 });
-
 db.incidents.createIndex({ "scenario_id": 1 });
 db.incidents.createIndex({ "user_id": 1 });
 db.incidents.createIndex({ "timestamp": -1 });
-
 db.logs.createIndex({ "incident_id": 1 });
 db.logs.createIndex({ "timestamp": -1 });
 db.logs.createIndex({ "source": 1 });
-
 db.network_traffic.createIndex({ "incident_id": 1 });
 db.network_traffic.createIndex({ "timestamp": -1 });
 db.network_traffic.createIndex({ "src_ip": 1 });
 db.network_traffic.createIndex({ "dst_ip": 1 });
-
 db.alerts.createIndex({ "incident_id": 1 });
 db.alerts.createIndex({ "severity": 1 });
 db.alerts.createIndex({ "timestamp": -1 });
-
 print("MongoDB initialization completed successfully!");

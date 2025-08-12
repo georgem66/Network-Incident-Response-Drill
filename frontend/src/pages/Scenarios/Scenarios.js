@@ -26,9 +26,7 @@ import {
   Search,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-
 import { scenarioService } from '../../services/api';
-
 const Scenarios = () => {
   const navigate = useNavigate();
   const [scenarios, setScenarios] = useState([]);
@@ -40,7 +38,6 @@ const Scenarios = () => {
     difficulty: '',
     category: '',
   });
-
   useEffect(() => {
     const fetchScenarios = async () => {
       try {
@@ -53,46 +50,33 @@ const Scenarios = () => {
         setLoading(false);
       }
     };
-
     fetchScenarios();
   }, []);
-
   useEffect(() => {
     let filtered = scenarios;
-
-    // Search filter
     if (filters.search) {
       filtered = filtered.filter(scenario =>
         scenario.title.toLowerCase().includes(filters.search.toLowerCase()) ||
         scenario.description.toLowerCase().includes(filters.search.toLowerCase())
       );
     }
-
-    // Severity filter
     if (filters.severity) {
       filtered = filtered.filter(scenario => scenario.severity === filters.severity);
     }
-
-    // Difficulty filter
     if (filters.difficulty) {
       filtered = filtered.filter(scenario => scenario.difficultyLevel === filters.difficulty);
     }
-
-    // Category filter
     if (filters.category) {
       filtered = filtered.filter(scenario => scenario.category === filters.category);
     }
-
     setFilteredScenarios(filtered);
   }, [scenarios, filters]);
-
   const handleFilterChange = (field) => (event) => {
     setFilters(prev => ({
       ...prev,
       [field]: event.target.value
     }));
   };
-
   const clearFilters = () => {
     setFilters({
       search: '',
@@ -101,7 +85,6 @@ const Scenarios = () => {
       category: '',
     });
   };
-
   const getSeverityColor = (severity) => {
     switch (severity) {
       case 'critical':
@@ -116,7 +99,6 @@ const Scenarios = () => {
         return 'default';
     }
   };
-
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case 'advanced':
@@ -129,7 +111,6 @@ const Scenarios = () => {
         return 'default';
     }
   };
-
   const getCategoryIcon = (category) => {
     switch (category) {
       case 'web_application_attack':
@@ -142,7 +123,6 @@ const Scenarios = () => {
         return '⚠️';
     }
   };
-
   if (loading) {
     return (
       <Box>
@@ -150,10 +130,9 @@ const Scenarios = () => {
       </Box>
     );
   }
-
   return (
     <Box>
-      {/* Header */}
+      {}
       <Paper sx={{ p: 3, mb: 3 }}>
         <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
           Training Scenarios
@@ -163,8 +142,7 @@ const Scenarios = () => {
           to teach you critical cybersecurity skills through hands-on practice.
         </Typography>
       </Paper>
-
-      {/* Filters */}
+      {}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} sm={6} md={3}>
@@ -241,8 +219,7 @@ const Scenarios = () => {
           Showing {filteredScenarios.length} of {scenarios.length} scenarios
         </Typography>
       </Paper>
-
-      {/* Scenarios Grid */}
+      {}
       <Grid container spacing={3}>
         {filteredScenarios.map((scenario) => (
           <Grid item xs={12} md={6} lg={4} key={scenario._id}>
@@ -281,11 +258,9 @@ const Scenarios = () => {
                     </Box>
                   </Box>
                 </Box>
-                
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                   {scenario.description}
                 </Typography>
-
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Schedule sx={{ fontSize: 16, mr: 0.5, color: 'text.secondary' }} />
@@ -300,7 +275,6 @@ const Scenarios = () => {
                     </Typography>
                   </Box>
                 </Box>
-
                 {scenario.learningObjectives && scenario.learningObjectives.length > 0 && (
                   <Box>
                     <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
@@ -327,7 +301,6 @@ const Scenarios = () => {
                   </Box>
                 )}
               </CardContent>
-
               <CardActions sx={{ p: 2, pt: 0 }}>
                 <Button
                   size="small"
@@ -351,7 +324,6 @@ const Scenarios = () => {
           </Grid>
         ))}
       </Grid>
-
       {filteredScenarios.length === 0 && (
         <Paper sx={{ p: 4, textAlign: 'center' }}>
           <Typography variant="h6" color="text.secondary" gutterBottom>
@@ -372,5 +344,4 @@ const Scenarios = () => {
     </Box>
   );
 };
-
 export default Scenarios;

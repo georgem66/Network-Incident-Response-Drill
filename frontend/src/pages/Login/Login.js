@@ -22,20 +22,16 @@ import {
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-
 import { useAuth } from '../../contexts/AuthContext';
-
 const Login = () => {
   const { login, loading, error } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   const onSubmit = async (data) => {
     try {
       await login(data);
@@ -45,11 +41,9 @@ const Login = () => {
       toast.error(error.message || 'Login failed');
     }
   };
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
   return (
     <Box
       sx={{
@@ -108,13 +102,11 @@ const Login = () => {
             Sign in to your Incident Response training account
           </Typography>
         </Box>
-
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
-
         <form onSubmit={handleSubmit(onSubmit)}>
           <TextField
             fullWidth
@@ -139,7 +131,6 @@ const Login = () => {
             error={!!errors.username}
             helperText={errors.username?.message}
           />
-
           <TextField
             fullWidth
             label="Password"
@@ -170,7 +161,6 @@ const Login = () => {
             error={!!errors.password}
             helperText={errors.password?.message}
           />
-
           <Button
             type="submit"
             fullWidth
@@ -193,13 +183,11 @@ const Login = () => {
               'Sign In'
             )}
           </Button>
-
           <Divider sx={{ my: 2 }}>
             <Typography variant="body2" color="text.secondary">
               New to the platform?
             </Typography>
           </Divider>
-
           <Box sx={{ textAlign: 'center' }}>
             <Link
               component={RouterLink}
@@ -217,7 +205,6 @@ const Login = () => {
             </Link>
           </Box>
         </form>
-
         <Box sx={{ mt: 3, p: 2, bgcolor: 'grey.50', borderRadius: 2 }}>
           <Typography variant="caption" color="text.secondary" align="center" display="block">
             Demo Credentials:
@@ -230,5 +217,4 @@ const Login = () => {
     </Box>
   );
 };
-
 export default Login;

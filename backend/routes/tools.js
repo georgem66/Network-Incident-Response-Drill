@@ -1,30 +1,8 @@
 const express = require('express');
-
 const router = express.Router();
-
-/**
- * @swagger
- * /api/tools/wireshark:
- *   get:
- *     summary: Get simulated Wireshark packet captures
- *     tags: [Tools]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: scenario
- *         schema:
- *           type: string
- *         description: Scenario ID to filter packets
- *     responses:
- *       200:
- *         description: Packet captures retrieved successfully
- */
 router.get('/wireshark', async (req, res, next) => {
   try {
     const { scenario } = req.query;
-    
-    // Simulated packet capture data
     const packets = [
       {
         id: 1,
@@ -57,7 +35,6 @@ router.get('/wireshark', async (req, res, next) => {
         data: "POST /search.php HTTP/1.1\nHost: webapp.local\nContent-Type: application/x-www-form-urlencoded\n\nsearch=' UNION SELECT username,password FROM users--"
       }
     ];
-
     res.json({
       success: true,
       data: {
@@ -70,19 +47,6 @@ router.get('/wireshark', async (req, res, next) => {
     next(error);
   }
 });
-
-/**
- * @swagger
- * /api/tools/suricata:
- *   get:
- *     summary: Get Suricata IDS alerts
- *     tags: [Tools]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: IDS alerts retrieved successfully
- */
 router.get('/suricata', async (req, res, next) => {
   try {
     const alerts = [
@@ -120,7 +84,6 @@ router.get('/suricata', async (req, res, next) => {
         message: 'Suspicious user agent string detected'
       }
     ];
-
     res.json({
       success: true,
       data: {
@@ -132,30 +95,9 @@ router.get('/suricata', async (req, res, next) => {
     next(error);
   }
 });
-
-/**
- * @swagger
- * /api/tools/syslog:
- *   get:
- *     summary: Get system logs
- *     tags: [Tools]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: level
- *         schema:
- *           type: string
- *           enum: [error, warn, info, debug]
- *         description: Log level filter
- *     responses:
- *       200:
- *         description: System logs retrieved successfully
- */
 router.get('/syslog', async (req, res, next) => {
   try {
     const { level } = req.query;
-    
     let logs = [
       {
         id: 1,
@@ -198,11 +140,9 @@ router.get('/syslog', async (req, res, next) => {
         message: 'Failed password for root from 185.220.100.241 port 55892 ssh2'
       }
     ];
-
     if (level) {
       logs = logs.filter(log => log.level === level);
     }
-
     res.json({
       success: true,
       data: {
@@ -215,5 +155,4 @@ router.get('/syslog', async (req, res, next) => {
     next(error);
   }
 });
-
 module.exports = router;

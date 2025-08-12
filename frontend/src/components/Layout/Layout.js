@@ -31,50 +31,40 @@ import {
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-
 const drawerWidth = 240;
-
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
   { text: 'Scenarios', icon: <AssignmentIcon />, path: '/scenarios' },
   { text: 'Tools', icon: <BuildIcon />, path: '/tools' },
   { text: 'Leaderboard', icon: <TrophyIcon />, path: '/leaderboard' },
 ];
-
 const Layout = ({ children }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
   const handleUserMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleUserMenuClose = () => {
     setAnchorEl(null);
   };
-
   const handleMenuItemClick = (path) => {
     navigate(path);
     setMobileOpen(false);
   };
-
   const handleProfileClick = () => {
     navigate('/profile');
     handleUserMenuClose();
   };
-
   const handleLogout = () => {
     logout();
     handleUserMenuClose();
   };
-
   const drawer = (
     <div>
       <Toolbar>
@@ -110,7 +100,6 @@ const Layout = ({ children }) => {
       </List>
     </div>
   );
-
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -134,7 +123,6 @@ const Layout = ({ children }) => {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Network Incident Response Drill
           </Typography>
-          
           <Tooltip title="Notifications">
             <IconButton color="inherit" sx={{ mr: 1 }}>
               <Badge badgeContent={3} color="error">
@@ -142,7 +130,6 @@ const Layout = ({ children }) => {
               </Badge>
             </IconButton>
           </Tooltip>
-
           <Tooltip title="User Menu">
             <IconButton onClick={handleUserMenuClick} color="inherit">
               <Avatar
@@ -152,7 +139,6 @@ const Layout = ({ children }) => {
               </Avatar>
             </IconButton>
           </Tooltip>
-
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
@@ -174,7 +160,6 @@ const Layout = ({ children }) => {
           </Menu>
         </Toolbar>
       </AppBar>
-
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -185,7 +170,7 @@ const Layout = ({ children }) => {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
@@ -205,7 +190,6 @@ const Layout = ({ children }) => {
           {drawer}
         </Drawer>
       </Box>
-
       <Box
         component="main"
         sx={{
@@ -220,5 +204,4 @@ const Layout = ({ children }) => {
     </Box>
   );
 };
-
 export default Layout;

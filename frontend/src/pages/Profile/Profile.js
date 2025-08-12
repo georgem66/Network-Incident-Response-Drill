@@ -1,6 +1,5 @@
 import React from 'react';
 import { Typography, Paper, Box } from '@mui/material';
-
 const Profile = () => {
   return (
     <Box>
@@ -15,5 +14,4 @@ const Profile = () => {
     </Box>
   );
 };
-
 export default Profile;

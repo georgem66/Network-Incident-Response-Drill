@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-
 const ScenarioAttempt = sequelize.define('ScenarioAttempt', {
   id: {
     type: DataTypes.UUID,
@@ -61,5 +60,4 @@ const ScenarioAttempt = sequelize.define('ScenarioAttempt', {
   tableName: 'scenario_attempts',
   underscored: true
 });
-
 module.exports = ScenarioAttempt;

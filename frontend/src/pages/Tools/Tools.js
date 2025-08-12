@@ -13,7 +13,6 @@ import {
   Download, PlayArrow, Stop, Refresh, ExpandMore, Visibility, Launch
 } from '@mui/icons-material';
 import toast from 'react-hot-toast';
-
 const Tools = () => {
   const [tabValue, setTabValue] = useState(0);
   const [suricataAlerts, setSuricataAlerts] = useState([]);
@@ -27,7 +26,6 @@ const Tools = () => {
   const [loading] = useState(false);
   const [selectedPacket, setSelectedPacket] = useState(null);
   const [captureRunning, setCaptureRunning] = useState(false);
-
   const loadToolData = async () => {
     try {
       switch (tabValue) {
@@ -48,13 +46,10 @@ const Tools = () => {
       toast.error('Failed to load tool data');
     }
   };
-
   useEffect(() => {
     loadToolData();
   }, [tabValue]);
-
   const loadSuricataData = async () => {
-    // Mock Suricata alerts data
     setSuricataAlerts([
       {
         id: 1,
@@ -97,9 +92,7 @@ const Tools = () => {
       }
     ]);
   };
-
   const loadWiresharkData = async () => {
-    // Mock packet capture data
     setPacketData([
       {
         id: 1,
@@ -136,9 +129,7 @@ const Tools = () => {
       }
     ]);
   };
-
   const loadSyslogData = async () => {
-    // Mock syslog data
     setSyslogData([
       {
         id: 1,
@@ -169,7 +160,6 @@ const Tools = () => {
       }
     ]);
   };
-
   const getSeverityColor = (severity) => {
     switch (severity?.toLowerCase()) {
       case 'high': return 'error';
@@ -178,7 +168,6 @@ const Tools = () => {
       default: return 'default';
     }
   };
-
   const getLogLevelColor = (level) => {
     switch (level?.toLowerCase()) {
       case 'error': return 'error';
@@ -188,11 +177,9 @@ const Tools = () => {
       default: return 'default';
     }
   };
-
   const startPacketCapture = async () => {
     setCaptureRunning(true);
     toast.success('Packet capture started');
-    // Simulate adding new packets
     setTimeout(() => {
       setPacketData(prev => [...prev, {
         id: prev.length + 1,
@@ -206,22 +193,18 @@ const Tools = () => {
       }]);
     }, 2000);
   };
-
   const stopPacketCapture = () => {
     setCaptureRunning(false);
     toast.success('Packet capture stopped');
   };
-
   const exportData = (toolName) => {
     toast.success(`${toolName} data exported successfully`);
   };
-
   const TabPanel = ({ children, value, index }) => (
     <div hidden={value !== index}>
       {value === index && <Box>{children}</Box>}
     </div>
   );
-
   return (
     <Box>
       <Paper sx={{ p: 3, mb: 3 }}>
@@ -232,15 +215,13 @@ const Tools = () => {
           Access integrated security tools for incident analysis and response
         </Typography>
       </Paper>
-
       <Card>
         <Tabs value={tabValue} onChange={(e, v) => setTabValue(v)} sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tab icon={<Security />} label="Suricata IDS" />
           <Tab icon={<NetworkCheck />} label="Wireshark" />
           <Tab icon={<Storage />} label="Syslog Viewer" />
         </Tabs>
-
-        {/* Suricata IDS Panel */}
+        {}
         <TabPanel value={tabValue} index={0}>
           <Box sx={{ p: 3 }}>
             <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -279,7 +260,6 @@ const Tools = () => {
                 </Box>
               </Grid>
             </Grid>
-
             <TableContainer component={Paper} variant="outlined">
               <Table>
                 <TableHead>
@@ -332,8 +312,7 @@ const Tools = () => {
             </TableContainer>
           </Box>
         </TabPanel>
-
-        {/* Wireshark Panel */}
+        {}
         <TabPanel value={tabValue} index={1}>
           <Box sx={{ p: 3 }}>
             <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -361,8 +340,7 @@ const Tools = () => {
                 </Box>
               </Grid>
             </Grid>
-
-            {/* Packet Filter */}
+            {}
             <Accordion sx={{ mb: 2 }}>
               <AccordionSummary expandIcon={<ExpandMore />}>
                 <FilterList sx={{ mr: 1 }} />
@@ -416,7 +394,6 @@ const Tools = () => {
                 </Grid>
               </AccordionDetails>
             </Accordion>
-
             <TableContainer component={Paper} variant="outlined">
               <Table size="small">
                 <TableHead>
@@ -460,8 +437,7 @@ const Tools = () => {
             </TableContainer>
           </Box>
         </TabPanel>
-
-        {/* Syslog Viewer Panel */}
+        {}
         <TabPanel value={tabValue} index={2}>
           <Box sx={{ p: 3 }}>
             <Grid container spacing={2} sx={{ mb: 3 }}>
@@ -497,7 +473,6 @@ const Tools = () => {
                 </Box>
               </Grid>
             </Grid>
-
             <Grid container spacing={2} sx={{ mb: 2 }}>
               <Grid item xs={12} md={4}>
                 <FormControl fullWidth size="small">
@@ -544,7 +519,6 @@ const Tools = () => {
                 />
               </Grid>
             </Grid>
-
             <List sx={{ bgcolor: 'background.paper', border: 1, borderColor: 'divider', borderRadius: 1 }}>
               {syslogData.map((log) => (
                 <React.Fragment key={log.id}>
@@ -581,8 +555,7 @@ const Tools = () => {
           </Box>
         </TabPanel>
       </Card>
-
-      {/* Packet Detail Dialog */}
+      {}
       <Dialog 
         open={!!selectedPacket} 
         onClose={() => setSelectedPacket(null)}
@@ -613,7 +586,6 @@ const Tools = () => {
                   <Typography variant="body2">{selectedPacket.dst}</Typography>
                 </Grid>
               </Grid>
-              
               {selectedPacket.flags && (
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="subtitle2" gutterBottom>TCP Flags:</Typography>
@@ -624,7 +596,6 @@ const Tools = () => {
                   </Box>
                 </Box>
               )}
-
               <Typography variant="subtitle2" gutterBottom>Payload:</Typography>
               <Paper sx={{ p: 2, bgcolor: 'grey.100' }}>
                 <Typography variant="body2" sx={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
@@ -641,5 +612,4 @@ const Tools = () => {
     </Box>
   );
 };
-
 export default Tools;
