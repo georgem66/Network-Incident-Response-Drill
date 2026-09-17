@@ -14,8 +14,7 @@ import {
   Select,
   MenuItem,
   Paper,
-  IconButton,
-  Tooltip,
+  Alert,
 } from '@mui/material';
 import {
   PlayArrow,
@@ -32,6 +31,7 @@ const Scenarios = () => {
   const [scenarios, setScenarios] = useState([]);
   const [filteredScenarios, setFilteredScenarios] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [filters, setFilters] = useState({
     search: '',
     severity: '',
@@ -45,7 +45,7 @@ const Scenarios = () => {
         setScenarios(response.data.scenarios);
         setFilteredScenarios(response.data.scenarios);
       } catch (error) {
-        console.error('Failed to fetch scenarios:', error);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -114,13 +114,13 @@ const Scenarios = () => {
   const getCategoryIcon = (category) => {
     switch (category) {
       case 'web_application_attack':
-        return '🌐';
+        return '01';
       case 'social_engineering':
-        return '📧';
+        return '02';
       case 'brute_force':
-        return '🔐';
+        return '03';
       default:
-        return '⚠️';
+        return '04';
     }
   };
   if (loading) {
@@ -133,9 +133,10 @@ const Scenarios = () => {
   return (
     <Box>
       {}
-      <Paper sx={{ p: 3, mb: 3 }}>
+      <Paper sx={{ p: { xs: 2, md: 4 }, mb: 3, background: '#12151d' }}>
+        <Typography variant="overline" color="primary.main">WORKSPACE / EXERCISE LIBRARY</Typography>
         <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
-          Training Scenarios
+          Choose your next challenge.
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Choose from our collection of realistic incident response scenarios. Each scenario is designed 
@@ -220,6 +221,7 @@ const Scenarios = () => {
         </Typography>
       </Paper>
       {}
+      {error && <Alert severity="error" sx={{ mb: 3 }}>Scenarios could not be loaded. Check your connection and reload this page.</Alert>}
       <Grid container spacing={3}>
         {filteredScenarios.map((scenario) => (
           <Grid item xs={12} md={6} lg={4} key={scenario._id}>
@@ -230,14 +232,13 @@ const Scenarios = () => {
                 flexDirection: 'column',
                 transition: 'transform 0.2s, box-shadow 0.2s',
                 '&:hover': {
-                  transform: 'translateY(-4px)',
-                  boxShadow: 6,
+                  borderColor: 'primary.main',
                 }
               }}
             >
               <CardContent sx={{ flexGrow: 1 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <Typography variant="h2" sx={{ mr: 1, fontSize: '2rem' }}>
+                  <Typography variant="h2" sx={{ mr: 2, fontSize: '1rem', color: 'primary.main', fontFamily: 'monospace' }}>
                     {getCategoryIcon(scenario.category)}
                   </Typography>
                   <Box>
@@ -324,7 +325,7 @@ const Scenarios = () => {
           </Grid>
         ))}
       </Grid>
-      {filteredScenarios.length === 0 && (
+      {!error && filteredScenarios.length === 0 && (
         <Paper sx={{ p: 4, textAlign: 'center' }}>
           <Typography variant="h6" color="text.secondary" gutterBottom>
             No scenarios found
